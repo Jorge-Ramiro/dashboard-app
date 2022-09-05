@@ -1,0 +1,134 @@
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: #7fafdf;
+  text-align: center;
+  font-family: Helvetica;
+}
+
+.content {
+  background-color: #1f2630;
+  width: 1320px;
+  height: 720px;
+  display: grid;
+  grid-template-columns: 55% 45%;
+  grid-template-rows: 25% 75%;
+  max-width: 1350px;
+  padding: 5px;
+}
+
+.Top-content {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+  display: grid;
+  grid-template-columns: 55% 45%;
+  grid-template-rows: 40% 60%;
+}
+
+.title-content {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+}
+
+.slider-content {
+  background-color: #252e3f;
+  grid-column: 1;
+  grid-row: 2;
+  padding: 5%;
+  margin: 2%;
+}
+
+.widgets {
+  background-color: #252e3f;
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+  margin: 2%;
+  padding: 1%;
+}
+
+#memory-regions {
+  grid-column: 1 / span 2;
+  grid-row: 1;
+  margin: 1% 0;
+}
+
+#memory-regions .VirtualizedSelectOption {
+  background-color: #1f2630;
+  color: #7fafdf;
+  font-family: sans-serif;
+}
+
+#memory-regions .VirtualizedSelectFocusedOption {
+  background-color: #7fafdf;
+  color: #1f2630;
+  font-family: sans-serif;
+}
+
+#memory-regions .Select-placeholder {
+  background-color: #1f2630;
+  color: #7fafdf;
+  font-family: sans-serif;
+  font-style: italic;
+}
+
+#memory-regions .Select-control {
+  background-color: #1f2630;
+}
+
+#memory-regions .Select-value-label {
+  color: #7fafdf !important;
+  font-family: sans-serif;
+}
+
+#top-type {
+  grid-column: 1 / span 2;
+  grid-row: 2;
+  margin: 2% auto 5%;
+  color: #7fafdf;
+  font-family: sans-serif;
+}
+
+.map-graph {
+  grid-column: 1;
+  grid-row: 2;
+  background-color: #252e3f;
+  padding: 2%;
+  margin: 2%;
+}
+
+#MapGraph {
+  width: 100%;
+  height: 100%;
+}
+
+.bar-graph {
+  background-color: #252e3f;
+  grid-column: 2;
+  grid-row: 2;
+  display: grid;
+  grid-template-rows: 50% 50%;
+  margin: 2%;
+  padding: 1%;
+}
+
+#RegionPie {
+  background-color: #1f2630;
+  width: 100%;
+  height: 98;
+  grid-row: 1;
+  font-family: Arial;
+}
+
+#BarGraph {
+  background-color: #1f2630;
+  width: 100%;
+  height: 98%;
+  grid-row: 2;
+  font-family: Arial;
+}
