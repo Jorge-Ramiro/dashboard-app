@@ -1,9 +1,4 @@
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
+h1, h2, h3, h4, h5, h6 {
   color: #7fafdf;
   text-align: center;
   font-family: Helvetica;
@@ -37,8 +32,16 @@ h6 {
   background-color: #252e3f;
   grid-column: 1;
   grid-row: 2;
-  padding: 5%;
   margin: 2%;
+  display: grid;
+  grid-template-rows:  50% 50%;
+}
+
+#title-slider {
+  color: #7fafdf;
+  margin: 1%;
+  font-family: Helvetica;
+  font-size: 20px;
 }
 
 .widgets {

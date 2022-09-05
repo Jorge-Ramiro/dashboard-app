@@ -22,42 +22,26 @@ def corrected_state(dataframe):
     return dataframe
 
 
-def generate_dataframe(filtered_data):
-    states = []
-    activity_name = []
-    total_registers = []
-
-    for state in filtered_data['entidad'].unique():
-        for index, value in filtered_data[filtered_data['entidad'] == state]['nombre_act'].value_counts()[:3].items():
-            states.append(state)
-            activity_name.append(index)
-            total_registers.append(value)
-    
-    filtered_df = pd.DataFrame(zip(states, activity_name, total_registers),  columns=['state', 'activity_name', 'total_registers'])
-    return filtered_df
-
-
 app = Dash(__name__)
-
-server = app.server
 
 app.layout = html.Div(
     className='content',
     children=[
-        # div que contiene al title, slider, dropdown y radio buttons
+        # div that contains the title, slider dropdown and radiobuttons
         html.Div(
             className='Top-content',
             children=[
-                # div donde irá el title
+                # title div
                 html.Div(
                     className='title-content',
                     children=[
                         html.H1(children='Manufacturing industries registered in Mexico by INEGI')
                     ]),
-                    # div donde irá el slider
+                    # slider div
                 html.Div(
                     className='slider-content',
                     children=[
+                        html.P(id='title-slider', children=['Drag the slider to change the year:']),
                         dcc.Slider(
                             id='year-slider',
                             min=data.year.min(),
@@ -66,29 +50,29 @@ app.layout = html.Div(
                             marks={str(year): {'label': str(year), 'style': {'color': '#7fafdf'}} for year in data.year.unique()},
                             step=None)
                     ]),
-                    # div donde irá el dropdown y los radiobottoms
+                    # div that contains the dropdown and radiobottoms
                 html.Div(
                     className='widgets',
                     children=[
-                        # dropdown de las regiones
+                        # regions dropdown
                         dcc.Dropdown(
                             id='memory-regions',
                             options=[{'label': i, 'value': i} for i in data.region.unique()],
                             placeholder="Select a region", searchable=False, value='norte'),
-                        # radio buttons
+                        # radiobuttons
                         dcc.RadioItems(
                             id='top-type',
                             options=[{'label': i, 'value': i} for i in ['Top 3', 'Top 5']],
                             value='Top 3', inline=True)
                     ])
             ]),
-            # div del mapa
+            # map div
         html.Div(
             className='map-graph',
             children=[
                 dcc.Graph(id='MapGraph', hoverData={'points': [{'customdata': 1}]})
             ]),
-            # div del grafico de barras
+            # bar graphic div
         html.Div(
             className='bar-graph',
             children=[
@@ -141,12 +125,10 @@ def update_bGraph(hoverData, selected_top):
 
 @app.callback(
     Output('RegionPie', 'figure'),
-    Input('memory-regions', 'value')
+    [Input('memory-regions', 'value'),
+    Input('top-type', 'value')]
 )
-def updateRegionsPie(selected_region):
-    if selected_region is None:
-        raise PreventUpdate
-
+def updateRegionsPie(selected_region, top):
     translated_region = ''
     if selected_region == 'centro':
         translated_region = 'Center'
@@ -156,10 +138,12 @@ def updateRegionsPie(selected_region):
 
     elif selected_region == 'sur':
         translated_region = 'South'
+    else:
+        raise PreventUpdate
     
     filtered_data = data[data['region'] == selected_region]
     
-    filtered_df = generate_dataframe(filtered_data)
+    filtered_df = filtered_data.groupby(['nombre_act'], as_index=False).size().rename(columns={'nombre_act':'activity_name', 'size':'total_registers'}).sort_values('total_registers', ascending=False)[:int(top[-1])]
 
     fig = px.pie(filtered_df, values='total_registers', names='activity_name') #width=586, height=270
     fig.update_layout(margin={"r":0,"t":32,"l":0,"b":0})
