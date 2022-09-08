@@ -6,15 +6,8 @@ import requests
 
 data = pd.read_csv("data/denue_inegi.csv")
 
-msk_north = ["Baja California", "Baja California Sur", "Sonora", "Chihuahua" , "Coahuila de Zaragoza", "Nuevo León", "Tamaulipas"]
-msk_south = ["Campeche", "Chiapas", "Guerrero", "Oaxaca", "Puebla", "Quintana Roo", "Tabasco", "Veracruz de Ignacio de la Llave", "Yucatán"]
-data['region'] = data['entidad'].apply(lambda x: "norte" if x in msk_north else ("sur" if x in msk_south else "centro"))
-data['year'] = data['fecha_alta'].apply(lambda x: int(x[:-3]))
-data.drop(columns='fecha_alta')
-
 repo_url = 'https://raw.githubusercontent.com/angelnmara/geojson/master/mexicoHigh.json'
 mx_regions_geo = requests.get(repo_url).json()
-
 
 def corrected_state(dataframe):
     dataframe['entidad'] = dataframe['entidad'].apply(
@@ -44,10 +37,10 @@ app.layout = html.Div(
                         html.P(id='title-slider', children=['Drag the slider to change the year:']),
                         dcc.Slider(
                             id='year-slider',
-                            min=data.year.min(),
-                            max=data.year.max(),
-                            value=data.year.min(),
-                            marks={str(year): {'label': str(year), 'style': {'color': '#7fafdf'}} for year in data.year.unique()},
+                            min=data['registration year'].min(),
+                            max=data['registration year'].max(),
+                            value=data['registration year'].min(),
+                            marks={str(year): {'label': str(year), 'style': {'color': '#7fafdf'}} for year in data['registration year'].unique()},
                             step=None)
                     ]),
                     # div that contains the dropdown and radiobottoms
@@ -86,7 +79,7 @@ app.layout = html.Div(
     Input(component_id='year-slider', component_property='value')
 )
 def update_map(selected_year):
-    filtered_data = data[data.year == selected_year].groupby(['cve_ent', 'entidad'], as_index=False).size().rename({'size':'total'}, axis=1)
+    filtered_data = data[data['registration year'] == selected_year].groupby(['cve_ent', 'entidad'], as_index=False).size().rename({'size':'total'}, axis=1)
     corrected_data = corrected_state(filtered_data)
     fig = px.choropleth_mapbox(data_frame=corrected_data, geojson=mx_regions_geo, featureidkey='properties.name', locations='entidad',
                                 color='total', opacity=0.8, color_continuous_scale="Blugrn", mapbox_style='carto-darkmatter',
